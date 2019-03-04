@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.c
+CalculatorMath.h
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.h
+stdio.h
+-
+
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.h
+

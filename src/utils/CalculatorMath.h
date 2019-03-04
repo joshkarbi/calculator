@@ -11,10 +11,11 @@
 // ARITHMETIC //
 
 // this will make our other code look cleaner
-double add(double x, double y);
-double subtract(double x, double y);
-double multiply(double x, double y);
-double divide(double x, double y);
+double intelliAdd(double x, double y);
+double intelliSubtract(double x, double y);
+double intelliMultiply(double x, double y);
+double intelliDivide(double x, double y);
+double intelliSqrt(double x);
 
 // TRIGONOMETRY //
 
@@ -26,8 +27,8 @@ double intelliTan(double angle);
 // LOGARITHMIC //
 
 // log base 10
-double log(double x);
+double intelliLog(double x);
 // log base e
-double ln(double x);
+double intelliLn(double x);
 
 #endif

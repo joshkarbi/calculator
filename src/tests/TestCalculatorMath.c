@@ -42,7 +42,7 @@ void testCos()
 	for (int i = 0; i < TEST_SIZE; i++)
 	{
 		printf("Testing cos(%f)\n", TEST_IN[i]);
-		assert(withinOnePercent(intelliSin(TEST_IN[i]), EXPECTED_OUT[i]));
+		assert(withinOnePercent(intelliCos(TEST_IN[i]), EXPECTED_OUT[i]));
 	}
 }
 

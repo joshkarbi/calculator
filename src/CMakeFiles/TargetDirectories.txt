@@ -1,0 +1,4 @@
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/rebuild_cache.dir
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/edit_cache.dir
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/TestCalculatorMath.exe.dir
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/IntelliCalc.exe.dir

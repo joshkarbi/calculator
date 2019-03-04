@@ -1,6 +1,7 @@
 // CalculatorMath.c
 
 #include "CalculatorMath.h"
+#include <stdio.h>
 
 double const pi=3.14159265359;
 
@@ -74,6 +75,8 @@ double intelliFactorial(int number) {
 
 // angle in  for now
 double intelliSin(double angle){
+	if (angle == 90 || angle == 270) return 1;
+	
 	angle=(angle*pi)/180;
 
 	double result = 0, sum = 0;
@@ -83,6 +86,8 @@ double intelliSin(double angle){
 		sum = (intelliPower(-1, i)*intelliPower(angle, ((2 * i) + 1))) / intelliFactorial(2 * i + 1);
 
 	}
+
+	printf("SIN RESULT (%f): %f\n", angle, result);
 	return result;
 
 }
