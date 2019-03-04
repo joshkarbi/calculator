@@ -19,9 +19,9 @@ double divide(double x, double y);
 // TRIGONOMETRY //
 
 // angle in degrees for now
-double sin(double angle);
-double cos(double angle);
-double tan(double angle);
+double intelliSin(double angle);
+double intelliCos(double angle);
+double intelliTan(double angle);
 
 // LOGARITHMIC //
 

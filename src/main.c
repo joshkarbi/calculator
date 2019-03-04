@@ -1,5 +1,9 @@
 // SmartCalculator
 
+#include "utils/CalculatorMath.h"
+#include "utils/Electrical.h"
+
+
 int main()
 {
     while(1)
