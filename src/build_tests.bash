@@ -1,3 +1,3 @@
 
 echo "TestCalculatorMath"
-gcc -g -O tests/TestCalculatorMath.h -o TestCalculatorMath.exe
+gcc tests/TestCalculatorMath.c -std=c89 -o TestCalculatorMath.exe utils/CalculatorMath.c -Itests -Iutils
