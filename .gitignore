@@ -51,6 +51,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 .DS_STORE
+
+# CMake Stuff
 CMakeCache.txt
 Makefile
 *.log
+cmake_install.cmake
