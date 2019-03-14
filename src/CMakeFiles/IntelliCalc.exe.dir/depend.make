@@ -5,3 +5,6 @@ CMakeFiles/IntelliCalc.exe.dir/main.c.o: main.c
 CMakeFiles/IntelliCalc.exe.dir/main.c.o: utils/CalculatorMath.h
 CMakeFiles/IntelliCalc.exe.dir/main.c.o: utils/Electrical.h
 
+CMakeFiles/IntelliCalc.exe.dir/utils/CalculatorMath.c.o: utils/CalculatorMath.c
+CMakeFiles/IntelliCalc.exe.dir/utils/CalculatorMath.c.o: utils/CalculatorMath.h
+

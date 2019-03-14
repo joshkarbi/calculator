@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/IntelliCalc.exe.dir/main.c.o"
+  "CMakeFiles/IntelliCalc.exe.dir/utils/CalculatorMath.c.o"
   "IntelliCalc.exe.pdb"
   "IntelliCalc.exe"
 )

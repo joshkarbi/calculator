@@ -6,13 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/main.c
-utils/CalculatorMath.h
+/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.c
+CalculatorMath.h
 /Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.h
-utils/Electrical.h
-/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/Electrical.h
+stdio.h
+-
 
 /Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.h
-
-/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/Electrical.h
 

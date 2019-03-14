@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/main.c" "/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/IntelliCalc.exe.dir/main.c.o"
+  "/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/utils/CalculatorMath.c" "/Users/joshuakarbi/Desktop/2018-2019/School/ECE 3375/SmartCalculator/src/CMakeFiles/IntelliCalc.exe.dir/utils/CalculatorMath.c.o"
   )
 set(CMAKE_C_COMPILER_ID "Clang")
 
