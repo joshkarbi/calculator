@@ -7,6 +7,9 @@
 *.obj
 *.elf
 
+# CMake
+src/CMakeFiles/
+
 # Linker output
 *.ilk
 *.map
