@@ -17,7 +17,6 @@
 
 #define KEYPAD_ROWS 4
 #define KEYPAD_COLS 4
-#define INPUT_BUFFER_SIZE 200
 #define UINT_MAX 4294967295
 
 // global for current button presses on keypad 
@@ -99,4 +98,23 @@ void updateKeypad()
 		}
 	}
 }
+
+// @param character: 0-9, ., [, ], s, t, c (sin, cos, tan), l, n, ^ 
+void writeToDisplay(const char character, const unsigned int displayNum)
+{
+
+}
+// display most recent 6 character from input sequence on hex displays as we input stuff
+void displayCurrentInput(const char* input, const unsigned int size)
+{
+
+}
+
+// display a result from calculation on seven segment displays (first 6 characters)
+void displayResult(const double x)
+{
+
+}
+
+
 #endif

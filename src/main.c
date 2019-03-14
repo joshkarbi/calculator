@@ -3,6 +3,7 @@
 #include "utils/CalculatorMath.h"
 #include "utils/Electrical.h"
 
+#define INPUT_BUFFER_SIZE 200
 
 // holds input sequence (ie. "(2+1)x3" )
 volatile char inputSequence[INPUT_BUFFER_SIZE] = {};
