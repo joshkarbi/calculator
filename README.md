@@ -4,7 +4,8 @@ A calculator that also displays information about battery power remaining, ambie
 Being built to run on the Altera DE-10 Standard Development Board.
 
 # Configuring CMake for Building
-After ccmake . hit the "c" key, then "q" to quit.
+Note: 'ccmake .' will bring up a CMake configuration window. Hit the "c" key, then "q" to quit.
+Refer to cmake.org for installing instructions.
 ```bash
 cd src/
 ccmake .
