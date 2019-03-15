@@ -24,7 +24,7 @@ volatile char primaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
 
 volatile char secondaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
                                                             {'+', '-', '/', 'S'},
-                                                            {'x', 's', 'c', 0},
+                                                            {'*', 's', 'c', 0},
                                                             {'t', '^', '!', '.'},
                                                             {'=', 'l', '(', ')'}
                                                            };
@@ -101,6 +101,16 @@ void updateInputBuffer()
 void waitForButtonPress()
 {
     // TODO
+    int i = 0;
+    int j = 0;
+    while (1)
+    {
+        scanKeypad();
+        for (; i < KEYPAD_ROWS; i++)
+            for (; j < KEYPAD_COLS; j++)
+                if (currentKeypad[i][j] && !pastKeypad[i][j])
+                    return;
+    }
 }
 
 void slightDelay()
@@ -131,6 +141,7 @@ int main()
                 double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
 
+                // TODO
                 waitForButtonPress();
             }
             else

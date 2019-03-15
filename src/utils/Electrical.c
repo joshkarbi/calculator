@@ -112,7 +112,7 @@ unsigned char decodeChar(const char character)
 		return lnChar;
 	case '+':
 		return plusChar;
-	case 'x':
+	case '*':
 		return multChar;
 	case '-':
 		return subChar;
