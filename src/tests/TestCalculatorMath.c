@@ -74,8 +74,16 @@ void testLogarithmic()
 
 }
 
+void testExpressionEvaluation()
+{
+	const volatile char *test1 = "5 + -2 * s(45)";
+	double result = evaluateExpression(test1, 6);
+	printf("TEST EVAL: %f\n\n", result);
+}
+
 int main()
 {
+	testExpressionEvaluation();
 
 	testArithmetic();
 

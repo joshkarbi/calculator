@@ -35,7 +35,7 @@ double intelliExponent(double a, double b);
 
 
 // Contains algorithms for parsing input sequence and returning results //
-double evaluateExpression(volatile char* input, volatile unsigned int size);
+double evaluateExpression(const volatile char* input, volatile unsigned int size);
 void updateInnermostParens(volatile char* input, unsigned int* left, unsigned int* right, volatile unsigned int size);
 
 // scan through input sequence and replace "s###", "c####", "t####" with just numbers

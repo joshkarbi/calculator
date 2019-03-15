@@ -98,6 +98,10 @@ void updateInputBuffer()
     }
 }
 
+void waitForButtonPress()
+{
+    // TODO
+}
 
 void slightDelay()
 {
@@ -123,8 +127,11 @@ int main()
         {
             if (inputSequence[inputSize-1] == '=')
             {
+                inputSequence[inputSize-1] = '\0';
                 double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
+
+                waitForButtonPress();
             }
             else
             {

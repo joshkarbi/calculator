@@ -1,6 +1,8 @@
 // CalculatorMath.c
 
 #include "CalculatorMath.h"
+#include "tinyexpr.h"
+
 #include <stdio.h>
 
 #define PI 3.14159265359
@@ -123,8 +125,12 @@ double intelliTan(double angle){
 
 // log base 10
 double log(double x);
+
 // log base e
-double ln(double x);
+double intelliLn(double x)
+{
+	return 0;
+}
 
 
 // left and right should hold indices of innermost parentheses in input
@@ -150,9 +156,18 @@ void updateInnermostParens(volatile char* input, unsigned int* left, unsigned in
 
 // Parse input sequence as C string and return result //
 // See Shunting-Yard Algorithm
-double evaluateExpression(volatile char* input, volatile unsigned int size)
+
+
+double evaluateExpression(const volatile char* input, volatile unsigned int size)
 {
-	unsigned int left = 0;
+	te_variable vars[] = {
+        {"s", intelliSin, TE_FUNCTION1},
+        {"c", intelliCos, TE_FUNCTION1},
+        {"t", intelliTan, TE_FUNCTION1},
+        {"l", intelliLn, TE_FUNCTION1}
+	};
+
+	/**unsigned int left = 0;
 	unsigned int right = 0;
 	double result = 0;
 
@@ -161,14 +176,31 @@ double evaluateExpression(volatile char* input, volatile unsigned int size)
 		updateInnermostParens(input, &left, &right, size);
 
 	}
+	**/
+	printf("evaluate\n");
+	int err;
+    te_expr *n = te_compile(input, vars, 1, &err);
 
-	return result;
+    /* SWITCH 'x' with '*' */
+    
+    if (n) {
+    	printf("Eval");
+        double r = te_eval(n);
+        te_free(n);
+        return r;
+    } else {
+        
+        /** ERROR **/
+
+    }
+
+	return 0;
 }
 
 // scan through input sequence and replace "s###", "c####", "t####" with just numbers
 void processTrig(volatile char* input, volatile unsigned int size)
 {
-	
+
 }
 
 // scan through input sequence and replace "### + ### - ### x ### / ###", with just numbers
