@@ -16,6 +16,7 @@ ccmake -G "Unix Makefiles"
 ```
 
 # Building
+Note: tinyexpr.c and tinyexpr.h from https://github.com/codeplea/tinyexpr will need to first be downloaded into src/utils/.
 ```bash
 cd src/
 make
