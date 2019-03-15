@@ -11,8 +11,8 @@
 src/CMakeFiles/
 
 # tinyexpr library
-utils/tinyexpr.c
-utils/tinyexpr.h
+src/utils/tinyexpr.c
+src/utils/tinyexpr.h
 
 # Linker output
 *.ilk
