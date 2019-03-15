@@ -76,6 +76,7 @@ void testLogarithmic()
 
 int main()
 {
+
 	testArithmetic();
 
 	testTrigonometric();

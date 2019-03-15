@@ -31,4 +31,7 @@ double intelliLog(double x);
 // log base e
 double intelliLn(double x);
 
+// weird way of linking
+#include "CalculatorMath.c"
+
 #endif
