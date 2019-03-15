@@ -23,7 +23,7 @@ volatile char primaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
                                                          };
 
 volatile char secondaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
-                                                            {'+', '-', '\\', 'S'},
+                                                            {'+', '-', '/', 'S'},
                                                             {'x', 's', 'c', 0},
                                                             {'t', '^', '!', '.'},
                                                             {'=', 'l', '(', ')'}
@@ -108,14 +108,6 @@ void slightDelay()
 	}
 }
 
-/** Evaluate the expression in inputSequence and return result **/
-double evaluate()
-{
-
-    // TEMPORARY
-    return 0;
-}
-
 /** Holds high-level application logic **/
 int main()
 {
@@ -131,7 +123,7 @@ int main()
         {
             if (inputSequence[inputSize-1] == '=')
             {
-                double result = evaluate();
+                double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
             }
             else

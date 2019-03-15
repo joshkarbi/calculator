@@ -116,7 +116,7 @@ unsigned char decodeChar(const char character)
 		return multChar;
 	case '-':
 		return subChar;
-	case '\\':
+	case '/':
 		return divChar;
 	case '!':
 		return factChar;

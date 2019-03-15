@@ -3,7 +3,8 @@
 #include "CalculatorMath.h"
 #include <stdio.h>
 
-double const pi=3.14159265359;
+#define PI 3.14159265359
+#define NO_PARENS 123456
 
 // this will make our other code look cleaner
 double intelliAdd(double x, double y){
@@ -77,7 +78,7 @@ double intelliFactorial(int number) {
 double intelliSin(double angle){
 	if (angle == 90 || angle == 270) return 1;
 	
-	angle=(angle*pi)/180;
+	angle=(angle*PI)/180;
 
 	double result = 0, sum = 0;
 	for (int i = 0;i < 1000;i++)
@@ -95,7 +96,7 @@ double intelliSin(double angle){
 
 double intelliCos(double angle){
 	
-	angle=(angle*pi)/180;
+	angle=(angle*PI)/180;
 
 	double result = 0, sum = 0;
 	for (int i = 0;i < 1000;i++)
@@ -109,7 +110,7 @@ double intelliCos(double angle){
 	
 }
 double intelliTan(double angle){
-	angle=(angle*pi)/180;
+	angle=(angle*PI)/180;
 
 	double result = 0;
 	
@@ -124,3 +125,61 @@ double intelliTan(double angle){
 double log(double x);
 // log base e
 double ln(double x);
+
+
+// left and right should hold indices of innermost parentheses in input
+void updateInnermostParens(volatile char* input, unsigned int* left, unsigned int* right, volatile unsigned int size)
+{
+	unsigned int i = 0;
+	for (; i < size; i++)
+	{
+		if (input[i] == '(')
+		{
+			*left = i;
+		}
+		if (input[i] == ')')
+		{
+			*right = i;
+			return;
+		}
+	}
+
+	// if we make it here there are no brackets left to set left and right to UINT_MAX
+	*left = *right = NO_PARENS;
+}
+
+// Parse input sequence as C string and return result //
+// See Shunting-Yard Algorithm
+double evaluateExpression(volatile char* input, volatile unsigned int size)
+{
+	unsigned int left = 0;
+	unsigned int right = 0;
+	double result = 0;
+
+	while (left != NO_PARENS && right != NO_PARENS)
+	{
+		updateInnermostParens(input, &left, &right, size);
+
+	}
+
+	return result;
+}
+
+// scan through input sequence and replace "s###", "c####", "t####" with just numbers
+void processTrig(volatile char* input, volatile unsigned int size)
+{
+	
+}
+
+// scan through input sequence and replace "### + ### - ### x ### / ###", with just numbers
+void processArithmetic(volatile char* input, volatile unsigned int size)
+{
+
+}
+
+// scan through input sequence and replace "l###" and "### ^ ###" with numbers
+void processLogarithmic(volatile char* input, volatile unsigned int size)
+{
+
+}
+
