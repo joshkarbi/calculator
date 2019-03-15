@@ -10,6 +10,10 @@
 # CMake
 src/CMakeFiles/
 
+# tinyexpr library
+utils/tinyexpr.c
+utils/tinyexpr.h
+
 # Linker output
 *.ilk
 *.map
