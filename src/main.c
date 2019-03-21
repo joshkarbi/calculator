@@ -135,7 +135,7 @@ int main()
 
         if (appState == STATE_CALCULATING)
         {
-            if (inputSequence[inputSize-1] == '=')
+            if (inputSize != 0 && inputSequence[inputSize-1] == '=')
             {
                 inputSequence[inputSize-1] = '\0';
                 double result = evaluateExpression(inputSequence, inputSize);
