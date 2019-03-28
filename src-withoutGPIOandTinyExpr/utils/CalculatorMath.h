@@ -178,13 +178,6 @@ double intelliLn(double x)
 	return 0;
 }
 
-
-// left and right should hold indices of innermost parentheses in input
-void updateInnermostParens(volatile char* input, unsigned int* left, unsigned int* right, volatile unsigned int size)
-{
-
-}
-
 // we should allow numerical digits, -ve sign, and decimal point
 int isDigit(const volatile char letter)
 {
@@ -244,25 +237,6 @@ double evaluateExpression(const volatile char* input, volatile unsigned int size
 		return 0;
 	}
 }
-
-// scan through input sequence and replace "s###", "c####", "t####" with just numbers
-void processTrig(volatile char* input, volatile unsigned int size)
-{
-
-}
-
-// scan through input sequence and replace "### + ### - ### x ### / ###", with just numbers
-void processArithmetic(volatile char* input, volatile unsigned int size)
-{
-
-}
-
-// scan through input sequence and replace "l###" and "### ^ ###" with numbers
-void processLogarithmic(volatile char* input, volatile unsigned int size)
-{
-
-}
-
 
 
 #endif
