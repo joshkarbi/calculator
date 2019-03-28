@@ -223,6 +223,9 @@ double evaluateExpression(const volatile char* input, volatile unsigned int size
 	double x = atof(num1);
 	double y = atof(num2);
 	
+	free((void*)(num1));
+	free((void*)(num2));
+	
 	switch(operand)
 	{
 	case '+':
