@@ -9,7 +9,7 @@
 
 # CMake
 src/CMakeFiles/
-src-withoutGPIOandTinyExpr/CMakeFiles/
+src-demo/CMakeFiles/
 
 # tinyexpr library
 src/utils/tinyexpr.c
