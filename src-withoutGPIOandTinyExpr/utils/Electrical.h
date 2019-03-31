@@ -99,16 +99,16 @@ volatile unsigned int* switchAddr = (unsigned int*)0xFF200040;
 volatile unsigned int* keyAddr = (unsigned int*)0xFF200050;
 void scanKeypad()
 {
-	// See:  gpio_swporta_dr   register for writing to output (rows)
 	volatile unsigned int row = 0;
 	volatile unsigned int col = 0;
 
+
 	volatile unsigned int swPressed = 1;
 	volatile unsigned int keyPressed = 1;
-	for (; swPressed <= 8; swPressed = (swPressed<<1))
+	for (; swPressed < (0b1 << 8); swPressed = (swPressed<<1))
 	{
 			// switch is up
-			for (; keyPressed <= 4; keyPressed = (keyPressed << 1))
+			for (; keyPressed < (0b1 << 4); keyPressed = (keyPressed << 1))
 			{
 				row = swPressed/2;
 				switch(keyPressed)
@@ -137,7 +137,7 @@ void scanKeypad()
 					currentKeypad[row][col] = 0;
 				}
 			}
-			keyPressed = 1;
+		keyPressed = 1;
 		swPressed = 1;
 	}
 }

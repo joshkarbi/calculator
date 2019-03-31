@@ -16,7 +16,7 @@ volatile unsigned int inputSize = 0;
 
 
 // each row corresponds to a switch and 4 keys
-// ie. row 0 is SW0 and KEYS[3:0]
+// ie. row i is SW[i] and cols KEYS[3:0]
 volatile char primaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
                                                             {'1', '2', '3', 'C'},
                                                             {'4', '5', '6', 0x2F},
@@ -46,10 +46,8 @@ void updateInputBuffer()
     {
         // CLR button pressed
         clearInputBuffer();
+        return;
     }
-
-    // TODO: Check for press on "Show Info"
-
 
     volatile unsigned int i = 0;
     volatile unsigned int j = 0;
@@ -57,6 +55,7 @@ void updateInputBuffer()
     {
         for ( ; j < KEYPAD_COLS; j++)
         {
+            // check is button was just pressed
             if (currentKeypad[i][j] && !pastKeypad[i][j])
             {
                 inputSequence[inputSize] = primaryButtons[i][j];
@@ -79,25 +78,25 @@ void updateInputBuffer()
 void waitForButtonPress()
 {
     // TODO 
-    int i = 0;
-    int j = 0;
+    volatile unsigned int i = 0;
+    volatile unsigned int j = 0;
     while (1)
     {
         scanKeypad();
         for (; i < KEYPAD_ROWS; i++)
             for (; j < KEYPAD_COLS; j++)
-                if (currentKeypad[i][j] && !pastKeypad[i][j])
+                if (currentKeypad[i][j])
                     return;
     }
 }
 
 void slightDelay()
 {
-	/*volatile int t = 0;
+	volatile int t = 0;
 	while (t < 10)
 	{
 		t++;
-	}*/
+	}
 }
 
 /** Holds high-level application logic **/
@@ -105,11 +104,16 @@ int main()
 {
 	initKeypadGPIO();
     initBatteryGPIO();
+    // represent 20% intervals of battery power
+    volatile unsigned int percentagePower20Intervals[] = {0, 0, 0, 0, 0};
 
     while (1)
     {
+        // this updates global 2D arrays currentKeypad and pastKeypad in Electrical.h
         scanKeypad();
 
+        // decode key press and store character in buffer
+        // will also update appState to STATE_DISPLAY_INFO if needed
         updateInputBuffer();
 
         if (appState == STATE_CALCULATING)
@@ -120,7 +124,6 @@ int main()
                 double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
 
-                // TODO
                 waitForButtonPress();
                 clearInputBuffer();
             }
@@ -131,10 +134,6 @@ int main()
         }
         else
         {
-            // TODO: add logic for showing sensor info
-            // loop iterating through sensor values
-            // checking for any button press which forces appState back to calculating
-            volatile unsigned int percentagePower20Intervals[] = {0, 0, 0, 0, 0}; // 0-20, 20-40, 40-60, 60-80, 80-100
             updateBatteryPercentage(percentagePower20Intervals);
             volatile unsigned int k = 0;
             volatile unsigned int percentageResult = 0;
@@ -145,31 +144,14 @@ int main()
                     // found first non-1 so this tells us percentage
                     double percentage = (double)((k+1)*20); 
                     displayResult(percentage);
+                    waitForButtonPress();
+                    appState = STATE_CALCULATING;
+                    clearInputBuffer();
+                    break;
                 }
             }
-
-
-        while (1) {
-            scanKeypad();
-            volatile unsigned int i = 0;
-            volatile unsigned int j = 0;
-            for(; i < 8; i++)
-            {
-                for(; j < 4; j++)
-                {
-                    if (currentKeypad[i][j])
-                    {
-                        // button was pressed so go back to calculating mode
-                        appState = STATE_CALCULATING;
-                        break;
-                    }
-                }
-                j = 0;
-            }
-         }
         }
 
-        slightDelay();
     }
     return 0;
 }
