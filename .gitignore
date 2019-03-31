@@ -10,6 +10,8 @@
 # CMake
 src/CMakeFiles/
 src-demo/CMakeFiles/
+src-demo/CMakeCache.txt
+src-demo/cmake_install.cmake
 
 # tinyexpr library
 src/utils/tinyexpr.c
