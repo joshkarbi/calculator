@@ -17,7 +17,7 @@
 
 // ARITHMETIC //
 
-// this will make our other code look cleaner
+// for consistency across code base
 double intelliAdd(double x, double y);
 double intelliSubtract(double x, double y);
 double intelliMultiply(double x, double y);
@@ -26,39 +26,20 @@ double intelliSqrt(double x);
 
 // TRIGONOMETRY //
 
-// angle in degrees for now
+// angle in degrees
 double intelliSin(double angle);
 double intelliCos(double angle);
 double intelliTan(double angle);
 
 // EXPONENTIAL / LOGARITHMIC //
 
-// log base 10
-double intelliLog(double x);
 // log base e
 double intelliLn(double x);
 // a^b
 double intelliExponent(double a, double b);
 
 
-// Contains algorithms for parsing input sequence and returning results //
-double evaluateExpression(const volatile char* input, volatile unsigned int size);
-void updateInnermostParens(volatile char* input, unsigned int* left, unsigned int* right, volatile unsigned int size);
-
-// scan through input sequence and replace "s###", "c####", "t####" with just numbers
-void processTrig(volatile char* input, volatile unsigned int size);
-
-// scan through input sequence and replace "### + ### - ### x ### / ###", with just numbers
-void processArithmetic(volatile char* input, volatile unsigned int size);
-
-// scan through input sequence and replace "l###" and "### ^ ###" with numbers
-void processLogarithmic(volatile char* input, volatile unsigned int size);
-
-// weird way of linking
-//#include "CalculatorMath.c"
-
-
-// this will make our other code look cleaner
+// these functions are only for consistency across code-base
 double intelliAdd(double x, double y){
 	double val=0;
 	val=x+y;
@@ -86,130 +67,96 @@ double intelliDivide(double x, double y){
 double intelliPower(double base, int exponent)
 {
 	double result = 1;
-	if (exponent > 0) {// for loop if the exponent is positive 
-		for (int i = 0;i < exponent;i++) {
-			result = result*base;
+	if (exponent == 0) { return 1.0; }
+	else if (exponent < 0) {
+		intelliPower(base, -1 * exponent));
+	} else {
+		int i = 0;
+		for (; i < exponent; i++) {
+			result *= base;
 		}
-	}
-	if (exponent < 0) {// for loop if the exponent is negative
-
-		for (int i = exponent;i <0;i++) {
-			result = result / base;
-		}
-	}
-	if (exponent == 0) {// the answer is 1 if the exponent is zero
-		result = 1;
 	}
 	return result;
 
 }
 
 double intelliFactorial(int number) {
-	double result = number;
-	if (number == 0) {
-		result = 1;
+	double result = 1;
+	if (number <= 1) {
+		result = 1.0;
 	}
-	//for all other numbers
 	else {
-		//Following loop is executed while n is greater than one
-		for (int i = number - 1; i>0;i--) {
-			//Determines the factorial by running the loop continuously
-			result = result*i;
-			//Reduces the value of n by each time while the loop is executed
-
+		for (; number >= 1; number--) {
+			result *= number;
 		}
 	}
 	return result;
 }
 
-
-
 // TRIGONOMETRY //
 
-// angle in  for now
+// angle in degrees for now
+// these utilize the taylor series for sin, cos, tan
+// number of interrations
+#define TRIG_APPROXIMATE_ITERS 100
 double intelliSin(double angle){
-	if (angle == 90 || angle == 270) return 1;
-	
-	angle=(angle*PI)/180;
-
-	double result = 0, sum = 0;
-	for (int i = 0;i < 1000;i++)
-	{
-		result = sum + result;
-		sum = (intelliPower(-1, i)*intelliPower(angle, ((2 * i) + 1))) / intelliFactorial(2 * i + 1);
-
+	double sign = 1;
+	unsigned int i = 1;
+	double result = 0;
+	for (; i < TRIG_APPROXIMATE_ITERS; i+= 2) {
+		result += (sign) * (intelliExponent(angle, i)/intelliFactorial(i));
+		sign *= -1; // flip sign
 	}
-
-	printf("SIN RESULT (%f): %f\n", angle, result);
 	return result;
-
 }
 	
 
 double intelliCos(double angle){
-	
-	angle=(angle*PI)/180;
-
-	double result = 0, sum = 0;
-	for (int i = 0;i < 1000;i++)
-	{
-		result = sum + result;
-		sum = (intelliPower(-1, i)*intelliPower(angle, (2 * i))) / intelliFactorial(2 * i);
-
+	double sign = -1;
+	unsigned int i = 2;
+	double result = 1;
+	for (; i < TRIG_APPROXIMATE_ITERS; i+= 2) {
+		result += (sign) * (intelliExponent(angle, i)/intelliFactorial(i));
+		sign *= -1; // flip sign
 	}
 	return result;
-	
-	
 }
-double intelliTan(double angle){
-	angle=(angle*PI)/180;
 
-	double result = 0;
-	
-	result=intelliSin(angle)/intelliCos(angle);
-	
-	return result;
+double intelliTan(double angle){
+	return intelliSin(angle)/intelliCos(angle);
 }
 
 // LOGARITHMIC //
 
-// log base 10
-double log(double x);
-
 // log base e
+// also uses taylor series for natural logarithm
+#define LOGARITHMIC_APPROX_ITERS 100
 double intelliLn(double x)
 {
-	return 0;
-}
-
-
-// left and right should hold indices of innermost parentheses in input
-void updateInnermostParens(volatile char* input, unsigned int* left, unsigned int* right, volatile unsigned int size)
-{
-	unsigned int i = 0;
-	for (; i < size; i++)
+	double result = 0;
+	double k = 1;
+	for (; k < LOGARITHMIC_APPROX_ITERS; k++) {
+			double term = intelliExponent(-1, k);
+			term *= intelliExponent((-1 + x), k);
+			term /= k;
+			result += term;
+	}
+	if (!(x > 0 && x < 2))
 	{
-		if (input[i] == '(')
-		{
-			*left = i;
-		}
-		if (input[i] == ')')
-		{
-			*right = i;
-			return;
-		}
+		result -= intelliLn(-1 + x);
 	}
 
-	// if we make it here there are no brackets left to set left and right to UINT_MAX
-	*left = *right = NO_PARENS;
+	result *= -1;
+	return result;
 }
 
+
 // Parse input sequence as C string and return result //
-// See Shunting-Yard Algorithm
-
-
 double evaluateExpression(const volatile char* input, volatile unsigned int size)
 {
+	// uses tinyexpr library
+	// this binds our custom functions to s, c, t, l in input sequence
+	// ie. s(32) will call intelliSin
 	te_variable vars[] = {
         {"s", intelliSin, TE_FUNCTION1},
         {"c", intelliCos, TE_FUNCTION1},
@@ -217,54 +164,20 @@ double evaluateExpression(const volatile char* input, volatile unsigned int size
         {"l", intelliLn, TE_FUNCTION1}
 	};
 
-	/**unsigned int left = 0;
-	unsigned int right = 0;
-	double result = 0;
-
-	while (left != NO_PARENS && right != NO_PARENS)
-	{
-		updateInnermostParens(input, &left, &right, size);
-
-	}
-	**/
 	printf("evaluate\n");
 	int err;
     te_expr *n = te_compile(input, vars, 1, &err);
-
-    /* SWITCH 'x' with '*' */
     
     if (n) {
     	printf("Eval");
         double r = te_eval(n);
         te_free(n);
         return r;
-    } else {
-        
-        /** ERROR **/
+    } 
 
-    }
-
+    // return 0 if error occurred?
 	return 0;
 }
-
-// scan through input sequence and replace "s###", "c####", "t####" with just numbers
-void processTrig(volatile char* input, volatile unsigned int size)
-{
-
-}
-
-// scan through input sequence and replace "### + ### - ### x ### / ###", with just numbers
-void processArithmetic(volatile char* input, volatile unsigned int size)
-{
-
-}
-
-// scan through input sequence and replace "l###" and "### ^ ###" with numbers
-void processLogarithmic(volatile char* input, volatile unsigned int size)
-{
-
-}
-
 
 
 #endif

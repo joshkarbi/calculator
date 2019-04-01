@@ -246,4 +246,30 @@ void displayResult(const double x)
 
 }
 
+// setup inputs on GPIO0 [11, 12, 13, 14, 15]
+void initBatteryGPIO()
+{
+	// this function doesn't have to do anything since all input pins beside 3:0 are
+	// already set as inputs by initKeypadGPIO()
+	// GPIO is also already taken out of reset mode, interrupts disabled
+}
+
+void updateBatteryPercentage(volatile unsigned int percentagePower20Intervals[])
+{
+	volatile unsigned int checkBits[] = {0b1 << 11, 0b1 << 12, 0b1 << 13, 0b1 << 14, 0b1 << 15};
+	volatile unsigned int i = 0;
+	for (; i < 5; i++)
+	{
+		if ((*GPIO0_ADDR + 0x50) & checkBits[i])
+		{
+			// this interval is logic 1
+			percentagePower20Intervals[i] = 1;
+		}
+		else
+		{
+			percentagePower20Intervals[i] = 0;
+		}
+	}
+}
+
 #endif
