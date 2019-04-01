@@ -152,67 +152,78 @@ double intelliLn(double x)
 }
 
 // we should allow numerical digits, -ve sign, and decimal point
+int isDigitFirstChar(const volatile char letter)
+{
+    if (letter >= '0' && letter <= '9')
+    return 1;
+    
+    if (letter == '-' || letter == '.')
+    return 1;
+    
+    return 0;
+}
+// when not first char, no negative sign
 int isDigit(const volatile char letter)
 {
-	if (letter >= '0' && letter <= '9')
-		return 1;
-
-	if (letter == '-' || letter == '.')
-		return 1;
-
-	return 0;
+    if (letter >= '0' && letter <= '9')
+    return 1;
+    
+    if ( letter == '.')
+    return 1;
+    
+    return 0;
 }
-
-// Parse input sequence as C string and return result
-// FOR DEMO PURPOSES: built only for arithmetic with 2 double values
 double evaluateExpression(const volatile char* input, volatile unsigned int size)
 {
-	volatile unsigned int sizeOfNum1 = 0;
-	volatile unsigned int sizeOfNum2 = 0;
-
-	// find length of first number
-	while (isDigit(input[sizeOfNum1++]));
-	sizeOfNum1--;
-
-	// sizeOfNum2 should point to one place past operand
-	sizeOfNum2 = sizeOfNum1+1;
-	char operand = '+';
-	if (input[sizeOfNum2-1] == '+') { operand = '+'; }
-	else if (input[sizeOfNum2-1] == '-') { operand = '-'; }
-	else if (input[sizeOfNum2-1] == '*') { operand = '*'; }
-	else { operand = '/'; }
-
-	while (isDigit(input[sizeOfNum2++]));
-	sizeOfNum2 -= sizeOfNum1+1;
-	// for demo purposes input will have a number, +, -, *, or /, then another number followed by '='
-	char * num1 = (char *)malloc(sizeof(char) * sizeOfNum1 + 1);
-	char * num2 = (char *)malloc(sizeof(char) * sizeOfNum2 + 1);
-	
-	// fill buffers memcpy(dest, src, numBytes)
-	memcpy((void *)num1, (void *)input, sizeOfNum1);
-	memcpy((void *)num2, (void *)input, sizeOfNum2);
-	num1[sizeOfNum1] = num2[sizeOfNum2] = '\0';
-
-	double x = atof(num1);
-	double y = atof(num2);
-	
-	free((void*)(num1));
-	free((void*)(num2));
-	
-	switch(operand)
-	{
-	case '+':
-		return x+y;
-	case '-':
-		return x-y;
-	case '*':
-		return x*y;
-	case '/':
-		return x/y;
-	default:
-		return 0;
-	}
+    volatile unsigned int sizeOfNum1 = 0;
+    volatile unsigned int sizeOfNum2 = 0;
+    
+    // find length of first number
+    if (isDigitFirstChar(input[sizeOfNum1])) {
+        sizeOfNum1++;
+    }
+    while (isDigit(input[sizeOfNum1++]));
+    sizeOfNum1--;
+    
+    // sizeOfNum2 should point to one place past operand
+    sizeOfNum2 = sizeOfNum1+1;
+    char operand = '+';
+    if (input[sizeOfNum2-1] == '+') { operand = '+'; }
+    else if (input[sizeOfNum2-1] == '-') { operand = '-'; }
+    else if (input[sizeOfNum2-1] == '*') { operand = '*'; }
+    else { operand = '/'; }
+    
+    while (isDigit(input[sizeOfNum2++]));
+    sizeOfNum2 -= sizeOfNum1+1;
+    sizeOfNum2--; // NEW
+    // for demo purposes input will have a number, +, -, *, or /, then another number followed by '='
+    char * num1 = (char *)malloc(sizeof(char) * sizeOfNum1 + 1);
+    char * num2 = (char *)malloc(sizeof(char) * sizeOfNum2 + 1);
+    
+    // fill buffers memcpy(dest, src, numBytes)
+    memcpy((void *)num1, (void *)input, sizeOfNum1);
+    memcpy((void *)num2, (void *)(input+sizeOfNum1+1), sizeOfNum2); // NEW
+    num1[sizeOfNum1] = num2[sizeOfNum2] = '\0';
+    
+    double x = atof(num1);
+    double y = atof(num2);
+    
+    free((void*)(num1));
+    free((void*)(num2));
+    
+    switch(operand)
+    {
+        case '+':
+        return x+y;
+        case '-':
+        return x-y;
+        case '*':
+        return x*y;
+        case '/':
+        return x/y;
+        default:
+        return 0;
+    }
 }
-
 
 #endif
