@@ -4,7 +4,7 @@
 
 #include <assert.h>
 #include <stdio.h>
-
+#include <math.h>
 
 int withinOnePercent(double a, double b)
 {
@@ -48,19 +48,14 @@ void testCos()
 
 void testTan()
 {
-
+	double x = 0;
+	for (; x < 361; x++)
+	{
+		printf("Testing tan(%f)\n", x);
+		assert(withinOnePercent(intelliTan(x), sin(x)/cos(x)));
+	}
 }
-void testTrig()
-{
 
-	return;
-}
-
-void testArithmetic()
-{
-
-	return;
-}
 
 void testTrigonometric()
 {
@@ -71,21 +66,17 @@ void testTrigonometric()
 
 void testLogarithmic()
 {
-
+	double x = 1;
+	for (; x < 1000; x++)
+	{
+		printf("Testing ln(%f)\n", x);
+		assert(withinOnePercent(intelliLn(x), log(x)));
+	}
 }
 
-void testExpressionEvaluation()
-{
-	const volatile char *test1 = "5 + -2 * s(45)";
-	double result = evaluateExpression(test1, 6);
-	printf("TEST EVAL: %f\n\n", result);
-}
 
 int main()
 {
-	testExpressionEvaluation();
-
-	testArithmetic();
 
 	testTrigonometric();
 

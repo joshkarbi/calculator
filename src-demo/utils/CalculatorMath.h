@@ -36,7 +36,7 @@ double intelliTan(double angle);
 double intelliLn(double x);
 // a^b
 double intelliExponent(double a, double b);
-
+double intelliPower(double base, int exponent);
 
 // these functions are only for consistency across code-base
 double intelliAdd(double x, double y){
@@ -68,7 +68,7 @@ double intelliPower(double base, int exponent)
 	double result = 1;
 	if (exponent == 0) { return 1.0; }
 	else if (exponent < 0) {
-		intelliPower(base, -1 * exponent));
+		intelliPower(base, -1 * exponent);
 	} else {
 		int i = 0;
 		for (; i < exponent; i++) {
@@ -105,7 +105,7 @@ double intelliSin(double angle){
 	unsigned int i = 1;
 	double result = 0;
 	for (; i < TRIG_APPROXIMATE_ITERS; i+= 2) {
-		result += (sign) * (intelliExponent(angle, i)/intelliFactorial(i));
+		result += (sign) * (intelliPower(angle, i)/intelliFactorial(i));
 		sign *= -1; // flip sign
 	}
 	return result;
@@ -117,7 +117,7 @@ double intelliCos(double angle){
 	unsigned int i = 2;
 	double result = 1;
 	for (; i < TRIG_APPROXIMATE_ITERS; i+= 2) {
-		result += (sign) * (intelliExponent(angle, i)/intelliFactorial(i));
+		result += (sign) * (intelliPower(angle, i)/intelliFactorial(i));
 		sign *= -1; // flip sign
 	}
 	return result;
@@ -137,8 +137,8 @@ double intelliLn(double x)
 	double result = 0;
 	double k = 1;
 	for (; k < LOGARITHMIC_APPROX_ITERS; k++) {
-			double term = intelliExponent(-1, k);
-			term *= intelliExponent((-1 + x), k);
+			double term = intelliPower(-1, k);
+			term *= intelliPower((-1 + x), k);
 			term /= k;
 			result += term;
 	}
