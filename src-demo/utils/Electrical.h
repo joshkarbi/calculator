@@ -14,7 +14,9 @@
  */
 
 #include <stdio.h>
- 
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef INTELLICALC_ELECTRICAL
 #define INTELLICALC_ELECTRICAL
 
@@ -95,18 +97,33 @@ const unsigned int rowSelect[KEYPAD_ROWS] = {0b1000, 0b100, 0b10, 0b1};
 const unsigned int colSelect[KEYPAD_COLS] = {0b10000000, 0b1000000, 0b100000, 0b10000};
 
 // update global 2D arrays for keypad presses
+// FOR DEMO - use switches and keys where each switch selects a row of the keypad
 volatile unsigned int* switchAddr = (unsigned int*)0xFF200040;
 volatile unsigned int* keyAddr = (unsigned int*)0xFF200050;
 void scanKeypad()
 {
 	volatile unsigned int row = 0;
 	volatile unsigned int col = 0;
-
+	volatile unsigned int temp = 0;
 
 	volatile unsigned int swPressed = 1;
 	volatile unsigned int keyPressed = 1;
-	for (; swPressed <= (0b1 << 8); swPressed = (swPressed<<1))
+
+	const unsigned int MAX_SW_PRESSED = (0b1 << 7);
+	const unsigned int MAX_KEY_PRESSED = (0b1 << 3);
+
+	for (; swPressed <= MAX_SW_PRESSED; swPressed = (swPressed<<1))
 	{
+			// new row is selected -> always clear old row and set previous state
+			row = swPressed/2;
+
+			temp = 0;
+			for (; temp <= KEYPAD_COLS; temp++)
+			{
+				pastKeypad[row][temp] = currentKeypad[row][temp];
+				currentKeypad[row][temp] = 0;
+			}
+
 			if ( !(*switchAddr & swPressed))
 			{
 				// switch not up so no need to check buttons for this row
@@ -114,9 +131,8 @@ void scanKeypad()
 			}
 
 			keyPressed = 1;
-			for (; keyPressed <= (0b1 << 4); keyPressed = (keyPressed << 1))
+			for (; keyPressed <= MAX_KEY_PRESSED; keyPressed = (keyPressed << 1))
 			{
-				row = swPressed/2;
 				switch(keyPressed)
 				{
 				case 1:
@@ -133,22 +149,17 @@ void scanKeypad()
 					break;
 				}
 
-				pastKeypad[row][col] = currentKeypad[row][col];
 				if (*keyAddr & keyPressed)
 				{
 					currentKeypad[row][col] = 1;
 				}
-				else
-				{
-					currentKeypad[row][col] = 0;
-				}
 			}
 
-			if (*switchAddr & swPressed)
+			/*if (*switchAddr & swPressed)
 			{
 				// can break after checking a valid row
 				break;
-			}
+			}*/
 	}
 }
 
@@ -159,16 +170,16 @@ unsigned char lookup[10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66,
 							0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
 unsigned char decPointChar = 0b1000; // bottom LED
-unsigned char expChar = 0b100011;
+unsigned char expChar = 0b100011; // ^
 unsigned char sinChar = 0b1101101; // S
 unsigned char cosChar = 0b1011000; // C
 unsigned char tanChar = 0b1111000; // t
 unsigned char lnChar = 0b111000; // L
 
-unsigned char plusChar = 0b1000110; 
-unsigned char multChar = 0b1110110;
-unsigned char subChar = 0b1000000;
-unsigned char divChar = 0b1100100; 
+unsigned char plusChar = 0b1000110; // +
+unsigned char multChar = 0b1110110; // x
+unsigned char subChar = 0b1000000; // -
+unsigned char divChar = 0b1100100; // \ 
 unsigned char factChar = 0b1110001; // F
 
 unsigned char leftBracketChar = 0b111001; // [
@@ -289,8 +300,10 @@ void displayResult(const double x)
 	// confirmed this works
 	sprintf(buffer, "%f", x);
 
+	size_t bufferFilledLen = strlen(buffer);
+
 	int i = 0;
-	for (; i < 6; i++)
+	for (; i < 6 && i < bufferFilledLen; i++)
 	{
 		writeToDisplay(buffer[i], 6-i);
 	}

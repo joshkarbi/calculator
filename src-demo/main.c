@@ -18,7 +18,7 @@ volatile unsigned int inputSize = 0;
 // each row corresponds to a switch and 4 keys
 // ie. row i is SW[i] and cols KEYS[3:0]
 volatile char primaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
-                                                            {'1', '2', '3', 'C'},
+                                                            {'1', '2', '-', '='},
                                                             {'4', '5', '6', 0x2F},
                                                             {'7', '8', '9', '.'},
                                                             {'=', '0', '(', ')'},
@@ -45,8 +45,8 @@ void updateInputBuffer()
     if (currentKeypad[0][3])
     {
         // CLR button pressed
-        clearInputBuffer();
-        return;
+        // clearInputBuffer(); -> UNCOMMENT (THIS IS FOR TESTING ONLY) ******
+        // return; -> UNCOMMENT (THIS IS FOR TESTING ONLY) ******
     }
 
     volatile unsigned int i = 0;
@@ -63,7 +63,7 @@ void updateInputBuffer()
                 if (i == 0 && j == 3)
                 {
                     // CLR pressed
-                    clearInputBuffer();
+                   //  clearInputBuffer(); - UNCOMMENT (FOR TESTING ONLY() ******
 
                 }
                 if (i == 4 && j == 3)
@@ -90,6 +90,7 @@ void waitForButtonPress()
             for (; j < KEYPAD_COLS; j++)
                 if (currentKeypad[i][j] && j != 3)
                     return;
+        slightDelay();
     }
 }
 
@@ -142,7 +143,9 @@ int main()
         }
         else
         {
+            // user selected to show battery percentage
             updateBatteryPercentage(percentagePower20Intervals);
+
             volatile unsigned int k = 0;
             volatile unsigned int percentageResult = 0;
             for (; k < 5; k++) 
