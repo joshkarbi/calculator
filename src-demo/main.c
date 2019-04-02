@@ -18,7 +18,7 @@ volatile unsigned int inputSize = 0;
 // each row corresponds to a switch and 4 keys
 // ie. row i is SW[i] and cols KEYS[3:0]
 volatile char primaryButtons[KEYPAD_ROWS][KEYPAD_COLS] = {
-                                                            {'1', '2', '-', '='},
+                                                            {'1', '2', '-', '='}, // -> CHANGE TO 1, 2, 3, C (FOR TESTING ONLY)
                                                             {'4', '5', '6', 0x2F},
                                                             {'7', '8', '9', '.'},
                                                             {'=', '0', '(', ')'},
