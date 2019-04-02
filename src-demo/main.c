@@ -80,12 +80,15 @@ void waitForButtonPress()
     // TODO 
     volatile unsigned int i = 0;
     volatile unsigned int j = 0;
+
+    clearCurrentKeypad();
+
     while (1)
     {
         scanKeypad();
         for (; i < KEYPAD_ROWS; i++)
             for (; j < KEYPAD_COLS; j++)
-                if (currentKeypad[i][j])
+                if (currentKeypad[i][j] && j != 3)
                     return;
     }
 }
@@ -98,7 +101,13 @@ void slightDelay()
 		t++;
 	}
 }
-
+void longDelay() 
+{
+    volatile unsigned int t = 10000;
+    for (; t != 0; t--) {
+        // nothing
+    }
+}
 /** Holds high-level application logic **/
 int main()
 {
@@ -120,10 +129,9 @@ int main()
         {
             if (inputSize != 0 && inputSequence[inputSize-1] == '=')
             {
-                inputSequence[inputSize-1] = '\0';
                 double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
-
+                longDelay();
                 waitForButtonPress();
                 clearInputBuffer();
             }

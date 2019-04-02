@@ -105,30 +105,36 @@ void scanKeypad()
 
 	volatile unsigned int swPressed = 1;
 	volatile unsigned int keyPressed = 1;
-	for (; swPressed < (0b1 << 8); swPressed = (swPressed<<1))
+	for (; swPressed <= (0b1 << 8); swPressed = (swPressed<<1))
 	{
-			// switch is up
-			for (; keyPressed < (0b1 << 4); keyPressed = (keyPressed << 1))
+			if ( !(*switchAddr & swPressed))
+			{
+				// switch not up so no need to check buttons for this row
+				continue;
+			}
+
+			keyPressed = 1;
+			for (; keyPressed <= (0b1 << 4); keyPressed = (keyPressed << 1))
 			{
 				row = swPressed/2;
 				switch(keyPressed)
 				{
 				case 1:
-					col = 0;
+					col = 3;
 					break;
 				case 2:
-					col = 1;
-					break;
-				case 4:
 					col = 2;
 					break;
+				case 4:
+					col = 1;
+					break;
 				default:
-					col = 3;
+					col = 0;
 					break;
 				}
 
 				pastKeypad[row][col] = currentKeypad[row][col];
-				if ((*switchAddr & swPressed) && (*keyAddr & keyPressed))
+				if (*keyAddr & keyPressed)
 				{
 					currentKeypad[row][col] = 1;
 				}
@@ -137,8 +143,12 @@ void scanKeypad()
 					currentKeypad[row][col] = 0;
 				}
 			}
-		keyPressed = 1;
-		swPressed = 1;
+
+			if (*switchAddr & swPressed)
+			{
+				// can break after checking a valid row
+				break;
+			}
 	}
 }
 
@@ -206,6 +216,26 @@ unsigned char decodeChar(const char character)
 		return 0;
 	}
 }
+
+// give 7-segment registers time to update
+void slightRAMDelay() {
+	volatile unsigned int delayLen = 100;
+	for (; delayLen != 0; delayLen--) {
+		// nothing
+	}
+}
+
+void clearCurrentKeypad() {
+	volatile unsigned int row = 0;
+	volatile unsigned int col = 0;
+	for (; row < KEYPAD_ROWS; row++)
+	{
+		for (; col < KEYPAD_COLS; col++)
+		{
+			currentKeypad[row][col] = 0;
+		}
+	}
+}
 // @param character: 0-9, ., [, ], s, t, c (sin, cos, tan), l, n, ^ 
 // @param displayNum - 0 to 5, 0 is right side, 5 is left
 void writeToDisplay(const char character, const unsigned int displayNum)
@@ -218,6 +248,7 @@ void writeToDisplay(const char character, const unsigned int displayNum)
 	{
 		*(hexBaseAddr_High + (displayNum-4)) = decodeChar(character);
 	}
+	slightRAMDelay();
 }
 
 void turnDisplaysOff()
@@ -227,26 +258,25 @@ void turnDisplaysOff()
 	{
 		writeToDisplay(0, i++);
 	}
+	slightRAMDelay();
 }
 
 // display most recent 6 character from input sequence on hex displays as we input stuff
-void displayCurrentInput(volatile char* input, const unsigned int size)
+void displayCurrentInput(volatile char* input, unsigned int size)
 {
-	if (size == 0)
+	// always overwrite whats currently on display
+	turnDisplaysOff();
+
+	if (size == 0) {
 		return;
-
-	int i = size-1;
-	int hexNum = 0;
-
-	if (i < 0)
-	{
-		turnDisplaysOff();
 	}
 
-	while (i >= 0)
+	int hexNum = 0;
+
+	while (size != 0)
 	{
-		writeToDisplay(input[i], hexNum);
-		i--;
+		writeToDisplay(input[size-1], hexNum);
+		size--;
 		hexNum++;
 	}
 }

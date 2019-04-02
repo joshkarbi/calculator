@@ -7,7 +7,9 @@
 
 
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
+ 
 #define PI 3.14159265359
 #define NO_PARENS 123456
 
