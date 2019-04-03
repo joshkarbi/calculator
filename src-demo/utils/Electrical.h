@@ -2,16 +2,9 @@
 
 /**
  * Contains functions for:
- *
- *   - reading keypad, and GPIO (ie. battery test circuit, photoresistor, thermistor)
- *   - outputting to displays and warning LED light
- *
- *
- * GPIO Pinout:
- * 	 - GPIO0 3:0 are outputs to row select lines of keypad
- *   - GPIO0 7:4 are inputs from column lines
- *	 - GPIO0 11:15 are inputs from battery power sensing circuit
- */
+ *   - reading input from switches/buttons (DEMO version)
+ *	 - displaying current input and result on seven-segment displays
+ **/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +28,8 @@ volatile int currentKeypad[KEYPAD_ROWS][KEYPAD_COLS] = {
 														{0, 0, 0, 0},
 														{0, 0, 0, 0}
 													   };
-// global for past button presses on keypad
+// global for past button presses on keypad (required to prevent multiple keystrokes)
+// TODO: replace this with button interrupts
 volatile int pastKeypad[KEYPAD_ROWS][KEYPAD_COLS] = {
 													{0, 0, 0, 0},
 													{0, 0, 0, 0},
@@ -67,9 +61,23 @@ void displayCurrentInput(volatile char* input, const unsigned int size);
 // display a result from calculation on seven segment displays (first 6 characters)
 void displayResult(const double x);
 
-// linking
-//#include "Electrical.c"
-// Electrical.c
+// fill current keypad state with 0's
+void clearCurrentKeypad();
+
+// return corresponding hex code
+unsigned char decodeChar(const char character);
+
+// turn off all displays
+void turnDisplaysOff();
+
+// delay for 7-segments to update
+void slightRAMDelay();
+
+// setup inputs from battery testing circuit
+void initBatteryGPIO();
+
+// fill given array with 20% power levels for battery
+void updateBatteryPercentage(volatile unsigned int percentagePower20Intervals[]);
 
 void initKeypadGPIO()
 {
@@ -104,35 +112,20 @@ void scanKeypad()
 {
 	volatile unsigned int row = 0;
 	volatile unsigned int col = 0;
-	volatile unsigned int temp = 0;
 
 	volatile unsigned int swPressed = 1;
 	volatile unsigned int keyPressed = 1;
-
-	const unsigned int MAX_SW_PRESSED = (0b1 << 7);
-	const unsigned int MAX_KEY_PRESSED = (0b1 << 3);
-
-	for (; swPressed <= MAX_SW_PRESSED; swPressed = (swPressed<<1))
+	for (; swPressed < (0b1 << 8); swPressed = (swPressed<<1))
 	{
-			// new row is selected -> always clear old row and set previous state
-			row = swPressed/2;
-
-			temp = 0;
-			for (; temp <= KEYPAD_COLS; temp++)
+			if ( !(*switchAddr & swPressed) )
 			{
-				pastKeypad[row][temp] = currentKeypad[row][temp];
-				currentKeypad[row][temp] = 0;
-			}
-
-			if ( !(*switchAddr & swPressed))
-			{
-				// switch not up so no need to check buttons for this row
+				// this switch isn't up so no need to scan through buttons
 				continue;
 			}
-
 			keyPressed = 1;
-			for (; keyPressed <= MAX_KEY_PRESSED; keyPressed = (keyPressed << 1))
+			for (; keyPressed < (0b1 << 4); keyPressed = (keyPressed << 1))
 			{
+				row = swPressed/2;
 				switch(keyPressed)
 				{
 				case 1:
@@ -149,18 +142,22 @@ void scanKeypad()
 					break;
 				}
 
+				pastKeypad[row][col] = currentKeypad[row][col];
 				if (*keyAddr & keyPressed)
 				{
 					currentKeypad[row][col] = 1;
 				}
+				else
+				{
+					currentKeypad[row][col] = 0;
+				}
 			}
-
-			/*if (*switchAddr & swPressed)
+			
+			if (*switchAddr & swPressed)
 			{
-				// can break after checking a valid row
 				break;
-			}*/
-	}
+			}
+	}	
 }
 
 
@@ -179,7 +176,7 @@ unsigned char lnChar = 0b111000; // L
 unsigned char plusChar = 0b1000110; // +
 unsigned char multChar = 0b1110110; // x
 unsigned char subChar = 0b1000000; // -
-unsigned char divChar = 0b1100100; // \ 
+unsigned char divChar = 0b1100100; // slash
 unsigned char factChar = 0b1110001; // F
 
 unsigned char leftBracketChar = 0b111001; // [
@@ -305,7 +302,7 @@ void displayResult(const double x)
 	int i = 0;
 	for (; i < 6 && i < bufferFilledLen; i++)
 	{
-		writeToDisplay(buffer[i], 6-i);
+		writeToDisplay(buffer[i], 5-i);
 	}
 
 }

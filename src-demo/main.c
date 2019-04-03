@@ -1,4 +1,7 @@
+//
 // SmartCalculator
+//
+// Built for: Intel DE-10 Standard Development Board (w/ ARM Cortex A9)
 
 #include "utils/CalculatorMath.h"
 #include "utils/Electrical.h"
@@ -45,8 +48,8 @@ void updateInputBuffer()
     if (currentKeypad[0][3])
     {
         // CLR button pressed
-        // clearInputBuffer(); -> UNCOMMENT (THIS IS FOR TESTING ONLY) ******
-        // return; -> UNCOMMENT (THIS IS FOR TESTING ONLY) ******
+        // clearInputBuffer(); -> UNCOMMENT to let [0][3] mean clear function
+        // return; 
     }
 
     volatile unsigned int i = 0;
@@ -55,17 +58,12 @@ void updateInputBuffer()
     {
         for ( ; j < KEYPAD_COLS; j++)
         {
-            // check is button was just pressed
+            // check if button was just pressed
             if (currentKeypad[i][j] && !pastKeypad[i][j])
             {
                 inputSequence[inputSize] = primaryButtons[i][j];
                 inputSize++;
-                if (i == 0 && j == 3)
-                {
-                    // CLR pressed
-                   //  clearInputBuffer(); - UNCOMMENT (FOR TESTING ONLY() ******
 
-                }
                 if (i == 4 && j == 3)
                 {
                     appState = STATE_DISPLAY_INFO;
@@ -74,34 +72,15 @@ void updateInputBuffer()
         }
     }
 }
-
-void waitForButtonPress()
+void slightDelay()
 {
-    // TODO 
-    volatile unsigned int i = 0;
-    volatile unsigned int j = 0;
-
-    clearCurrentKeypad();
-
-    while (1)
+    volatile int t = 0;
+    while (t < 10)
     {
-        scanKeypad();
-        for (; i < KEYPAD_ROWS; i++)
-            for (; j < KEYPAD_COLS; j++)
-                if (currentKeypad[i][j] && j != 3)
-                    return;
-        slightDelay();
+        t++;
     }
 }
 
-void slightDelay()
-{
-	volatile int t = 0;
-	while (t < 10)
-	{
-		t++;
-	}
-}
 void longDelay() 
 {
     volatile unsigned int t = 10000;
@@ -109,10 +88,24 @@ void longDelay()
         // nothing
     }
 }
+
+// wait for 9'th switch to be flipped
+void waitForButtonPress()
+{
+    volatile unsigned int SW9 = 0b100000000;
+    while (1)
+    {
+        if (*switchAddr & SW9)
+            break;
+    }
+}
+
+
+
 /** Holds high-level application logic **/
 int main()
 {
-	initKeypadGPIO();
+    initKeypadGPIO();
     initBatteryGPIO();
     // represent 20% intervals of battery power
     volatile unsigned int percentagePower20Intervals[] = {0, 0, 0, 0, 0};
