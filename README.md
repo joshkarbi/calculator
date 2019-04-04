@@ -23,4 +23,5 @@ cd src/
 make
 ```
 
-![alt text](https://github.com/joshuakarbi/SmartCalculator/blob/master/images/demo1.JPG)
+# Demo
+![alt text](https://github.com/joshuakarbi/SmartCalculator/blob/master/images/demo.gif)
