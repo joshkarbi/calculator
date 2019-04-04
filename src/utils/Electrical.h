@@ -42,13 +42,21 @@ volatile unsigned int* GPIO0_ADDR = (unsigned int*)(0xFF708000);
 volatile unsigned int* GPIO1_ADDR = (unsigned int*)(0xFF709000);
 volatile unsigned int* GPIO2_ADDR = (unsigned int*)(0xFF70A000);
 
+// initialize (required)
 void initKeypadGPIO();
+void initBatteryGPIO()
 
 // update global 2D arrays for keypad presses
 void scanKeypad();
 
+// @return seven-segment code for given character
+unsigned char decodeChar(const char character);
+
 // @param character: 0-9, ., [, ], s, t, c (sin, cos, tan), l, n, ^ 
 void writeToDisplay(const char character, const unsigned int displayNum);
+
+// turn all 6 displays off
+void turnDisplaysOff();
 
 // display most recent 6 character from input sequence on hex displays as we input stuff
 void displayCurrentInput(volatile char* input, const unsigned int size);
@@ -56,9 +64,8 @@ void displayCurrentInput(volatile char* input, const unsigned int size);
 // display a result from calculation on seven segment displays (first 6 characters)
 void displayResult(const double x);
 
-// linking
-//#include "Electrical.c"
-// Electrical.c
+// fill array with 20% power intervals (ie. 1, 1, 1, 0, 0 means up to 60% power left)
+void updateBatteryPercentage(volatile unsigned int percentagePower20Intervals[]);
 
 void initKeypadGPIO()
 {
@@ -238,12 +245,13 @@ void displayResult(const double x)
 	// confirmed this works
 	sprintf(buffer, "%f", x);
 
-	int i = 0;
-	for (; i < 6; i++)
-	{
-		writeToDisplay(buffer[i], 6-i);
-	}
+	size_t bufferFilledLen = strlen(buffer);
 
+	int i = 0;
+	for (; i < 6 && i < bufferFilledLen; i++)
+	{
+		writeToDisplay(buffer[i], 5-i);
+	}
 }
 
 // setup inputs on GPIO0 [11, 12, 13, 14, 15]

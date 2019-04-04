@@ -75,18 +75,14 @@ void updateInputBuffer()
     }
 }
 
+// wait for SW9 to go high
 void waitForButtonPress()
 {
-    // TODO 
-    volatile unsigned int i = 0;
-    volatile unsigned int j = 0;
+    volatile unsigned int SW9 = 0b100000000;
     while (1)
     {
-        scanKeypad();
-        for (; i < KEYPAD_ROWS; i++)
-            for (; j < KEYPAD_COLS; j++)
-                if (currentKeypad[i][j])
-                    return;
+        if (*switchAddr & SW9)
+            break;
     }
 }
 
@@ -120,10 +116,9 @@ int main()
         {
             if (inputSize != 0 && inputSequence[inputSize-1] == '=')
             {
-                inputSequence[inputSize-1] = '\0';
                 double result = evaluateExpression(inputSequence, inputSize);
                 displayResult(result);
-
+                slightDelay();
                 waitForButtonPress();
                 clearInputBuffer();
             }
