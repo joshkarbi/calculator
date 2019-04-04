@@ -22,3 +22,5 @@ On Intel FPGA Monitor Program: Add gcc flag "-lm".
 cd src/
 make
 ```
+
+![alt text](https://github.com/joshuakarbi/SmartCalculator/blob/master/images/demo1.JPG)
