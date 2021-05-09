@@ -1,7 +1,7 @@
-# SmartCalculator
+# smart-calculator
 A calculator that also displays information about battery power remaining, ambient light, and temperature.
 
-Being built to run on the Altera DE-10 Standard Development Board.
+Built for the Intel DE-10 Standard Development Board.
 
 # Project Structure
 src/ contains "production version" code, which reads input from a 4x4 keypad array connected to GPIO of the DE-10, as well as from a battery supply level comparator circuit.
@@ -29,6 +29,3 @@ On Intel FPGA Monitor Program: May need to add gcc flag "-lm".
 cd src/
 make
 ```
-
-# Demo
-![alt text](https://github.com/joshuakarbi/SmartCalculator/blob/master/images/demo.gif)
